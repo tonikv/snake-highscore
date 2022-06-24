@@ -31,7 +31,7 @@ const scoreSchema = new Schema({
     name: String,
     date: Date,
     score: Number,
-    playtime: { type: Number, required }
+    playtime: Number
 });
 
 const MyScore = mongoose.model('scores', scoreSchema);
