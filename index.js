@@ -9,7 +9,7 @@ const port = process.env.PORT;
 const URI = process.env.URI;
 
 const limiter = rateLimit({
-	windowMs: 10000, // 10 seconds
+	windowMs: 1000, // 1 seconds
 	max: 1, // Limit each IP to 10 requests per `window` (here, per 15 minutes)
 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
@@ -71,7 +71,7 @@ app.post('/api/store', async (req, res) => {
     if (req.body.constructor === Object && Object.keys(req.body).length <= 1) {
         res.status(400).json({ error: "need name and score data" });
     }
-    
+
     const scoreToStore = new MyScore({
         name: req.body.name,
         date: Date.now(),
