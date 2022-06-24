@@ -3,10 +3,19 @@ const express = require('express')
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const rateLimit = require('express-rate-limit')
 const app = express()
 const port = process.env.PORT;
 const URI = process.env.URI;
 
+const limiter = rateLimit({
+	windowMs: 10000, // 10 seconds
+	max: 1, // Limit each IP to 10 requests per `window` (here, per 15 minutes)
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+
+app.use(limiter);
 app.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -31,7 +40,6 @@ const scoreSchema = new Schema({
     name: String,
     date: Date,
     score: Number,
-    playtime: Number
 });
 
 const MyScore = mongoose.model('scores', scoreSchema);
@@ -72,7 +80,6 @@ app.post('/api/store', async (req, res) => {
         name: req.body.name,
         date: Date.now(),
         score: req.body.score,
-        playtime: req.body.playtime
     });
 
     try {
