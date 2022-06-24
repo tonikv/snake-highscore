@@ -8,7 +8,7 @@ const app = express()
 const port = process.env.PORT;
 const URI = process.env.URI;
 
-const limiter = rateLimit({
+const apiLimiter = rateLimit({
 	windowMs: 1000, // 1 seconds
 	max: 1, // Limit each IP to 10 requests per `window` (here, per 15 minutes)
 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
@@ -16,7 +16,7 @@ const limiter = rateLimit({
 })
 
 app.use(cors());
-app.use(limiter);
+app.use('/api/store', apiLimiter);
 app.use(bodyParser.urlencoded({
   extended: true
 }));
