@@ -15,12 +15,12 @@ const limiter = rateLimit({
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 })
 
+app.use(cors());
 app.use(limiter);
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json());
-app.use(cors());
 
 async function connectToDataBase() {
     try {
