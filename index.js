@@ -71,11 +71,7 @@ app.post('/api/store', async (req, res) => {
     if (req.body.constructor === Object && Object.keys(req.body).length <= 1) {
         res.status(400).json({ error: "need name and score data" });
     }
-
-    if (req.body.playtime < 5) {
-        res.status(400).json({ error: "Score input is incorrect" });
-    }
-
+    
     const scoreToStore = new MyScore({
         name: req.body.name,
         date: Date.now(),
