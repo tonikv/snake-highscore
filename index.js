@@ -30,7 +30,8 @@ const scoreSchema = new Schema({
     author: ObjectId,
     name: String,
     date: Date,
-    score: Number
+    score: Number,
+    playtime: { type: Number, required }
 });
 
 const MyScore = mongoose.model('scores', scoreSchema);
@@ -44,7 +45,6 @@ app.get('/api/all', async (req, res) => {
         const scores = await MyScore.find({}).sort([['score', -1]]);
         res.status(200).json(scores);
     } catch (err) {
-        console.log("Highscores error!")
         res.status(404).json({ error: err });
     }
 })
@@ -64,10 +64,15 @@ app.post('/api/store', async (req, res) => {
         res.status(400).json({ error: "need name and score data" });
     }
 
+    if (req.body.playtime < 5) {
+        res.status(400).json({ error: "Score input is incorrect" });
+    }
+
     const scoreToStore = new MyScore({
         name: req.body.name,
         date: Date.now(),
-        score: req.body.score
+        score: req.body.score,
+        playtime: req.body.playtime
     });
 
     try {
