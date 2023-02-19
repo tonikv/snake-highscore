@@ -59,12 +59,23 @@ app.get('/api/all', async (req, res) => {
 
 app.delete('/api/delete', async (req, res) => {
     try {
-        const deleteOne = await MyScore.findOneAndDelete({ score: { $gte: -1 } });
-        res.status(200).json({message: `deleted ${deleteOne}`});
-    } catch (err) {
-        console.log("error on delete");
-        res.status(402).json({ error: err });
+    const smallestScoreEntry = await Score.findOne().sort('score').exec();
+
+    if (!smallestScoreEntry) {
+      // Return an error response if there are no score entries
+      return res.status(404).send({ message: 'No score entries found' });
     }
+
+    // Delete the smallest score entry
+    await smallestScoreEntry.remove();
+
+    // Return a success response
+    res.status(200).send({ message: 'Smallest score entry deleted successfully' });
+  } catch (err) {
+    // Return an error response if there was an error
+    console.error(err);
+    res.status(500).send({ message: 'Internal server error' });
+  }
 })
 
 app.post('/api/store', async (req, res) => {
@@ -85,7 +96,7 @@ app.post('/api/store', async (req, res) => {
         res.status(400).json({ error: err });
     }
 });
-    
+
 
 app.listen(port, () => {
   console.log(`Snake highscore database is listening in ${port}`)
