@@ -22,9 +22,14 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+const mongoOptions = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}
+
 async function connectToDataBase() {
     try {
-        await mongoose.connect(URI);
+        await mongoose.connect(URI, mongoOptions);
     } catch (err) {
         console.log(err);
     }
